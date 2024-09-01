@@ -12,7 +12,6 @@ load_dotenv()
 
 # Get the API key from environment variable
 api_key = os.getenv('GOOGLE_API_KEY')
-RAW_DATA_PATH = 'maps_raw_data'
 
 
 def create_params(location, heading):
@@ -44,7 +43,7 @@ def calculate_heading(coord1, coord2, angle_offset=0):
     return (math.degrees(heading) + 360 + angle_offset) % 360
 
 
-def process_kml_file(file_path, filename, raw_data_path=RAW_DATA_PATH):
+def process_kml_file(file_path, filename, raw_data_path):
     if os.path.exists(file_path):
         os.system(f'mv {os.path.join(raw_data_path, filename + ".kmz")} {os.path.join(raw_data_path, filename + ".zip")}')
         if os.path.exists(os.path.join(raw_data_path, filename + ".zip")):
@@ -56,7 +55,7 @@ def main(args):
     filename = os.path.basename(args.file_path).split(".")[0]
     process_kml_file(args.file_path, filename, args.raw_data_path)
 
-    location = parse_location(os.path.join(RAW_DATA_PATH, filename, "doc.kml"), route_name=args.route_name, num_points=args.num_points)
+    location = parse_location(os.path.join(args.raw_data_path, filename, "doc.kml"), route_name=args.route_name, num_points=args.num_points)
     headings = [int(calculate_heading(location[i], location[i + 1], args.angle)) for i in range(len(location) - 1)]
     headings.append(headings[-1])
 
@@ -77,6 +76,6 @@ if __name__ == '__main__':
     parser.add_argument('-H', '--heading', type=list, default=[180], help='Heading of the street view image')
     parser.add_argument('-s', '--save_folder', type=str, help='Folder to save the street view images')
     parser.add_argument('-a', '--angle', type=int, default=0, help='Angle offset from the forward direction (0-359 degrees)')
-    parser.add_argument('-d', '--raw_data_path', type=str, default=RAW_DATA_PATH, help='Path to the raw data directory')
+    parser.add_argument('-d', '--raw_data_path', type=str, default='maps_raw_data', help='Path to the raw data directory')
     args = parser.parse_args()
     main(args)
