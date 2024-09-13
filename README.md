@@ -31,7 +31,7 @@ This project allows you to collect Google Street View images along a specified r
 
 Run the script using the following command structure:
 ```
-python map.py -f <kml_file_path> -r <route_name> -n <num_points> -s <save_folder> -a <angle_offset>
+python map.py -f <kml_file_path> -r <route_name> (-n <num_points> | -d <step_distance>) -s <save_folder> -a <angle_offset>
 ```
 
 ### Parameters:
@@ -39,11 +39,14 @@ python map.py -f <kml_file_path> -r <route_name> -n <num_points> -s <save_folder
 - `-f, --file_path`: Path to the KMZ file containing the route data
 - `-r, --route_name`: Name of the route in the KML file
 - `-n, --num_points`: Number of points to interpolate along the route
+- `-d, --step_distance`: Step distance for interpolation (in meters)
 - `-s, --save_folder`: Folder to save the Street View images
 - `-a, --angle`: Angle offset from the forward direction (0-359 degrees)
-- `-d, --raw_data_path`: Path to the raw data directory (default: 'maps_raw_data')
+- `--raw_data_path`: Path to the raw data directory (default: 'maps_raw_data')
 
-### Example:
+Note that `-n` and `-d` are mutually exclusive. You must provide either the number of points or the step distance, but not both.
+
+### Example1. Using number of points:
 ```
 python map.py -f maps_raw_data/raw_data.kmz -r NYCU -n 10 -s ./test_0901_nycu_a30 -a 30
 ```
@@ -54,6 +57,21 @@ This command will:
 3. Interpolate 10 points along the route
 4. Save the Street View images in the `./test_0901_nycu_a30` folder
 5. Apply a 30-degree angle offset to the image headings
+
+### Example2. Using step distance:
+```
+python map.py -f maps_raw_data/raw_data.kmz -r NYCU -d 50 -s ./test_0901_nycu_a30 -a 30
+```
+
+These commands will:
+1. Process the KMZ file located at `maps_raw_data/raw_data.kmz`
+2. Extract the route named "NYCU"
+3. Either interpolate using a step distance of 50 meters (second example)
+4. Save the Street View images in the `./test_0901_nycu_a30` folder
+5. Apply a 30-degree angle offset to the image headings
+
+These changes reflect the new functionality allowing users to specify either the number of points or the step distance for interpolation.
+
 
 ## How It Works
 
