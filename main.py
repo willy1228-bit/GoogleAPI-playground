@@ -55,7 +55,12 @@ def main(args):
     filename = os.path.basename(args.file_path).split(".")[0]
     process_kml_file(args.file_path, filename, args.raw_data_path)
 
-    location = parse_location(os.path.join(args.raw_data_path, filename, "doc.kml"), route_name=args.route_name, num_points=args.num_points)
+    # Update this line to pass both num_points and step_distance
+    location = parse_location(os.path.join(args.raw_data_path, filename, "doc.kml"), 
+                              route_name=args.route_name, 
+                              num_points=args.num_points, 
+                              step_distance=args.step_distance)
+                              
     headings = [int(calculate_heading(location[i], location[i + 1], args.angle)) for i in range(len(location) - 1)]
     headings.append(headings[-1])
 
@@ -66,16 +71,17 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    # add raw file path
-    # add route name
-    # add number of points to interpolate
-    # add heading
-    parser.add_argument('-f', '--file_path', type=str, help='Path to the kml file')
-    parser.add_argument('-r', '--route_name', type=str, help='Name of the route')
-    parser.add_argument('-n', '--num_points', type=int, help='Number of points to interpolate')
-    parser.add_argument('-H', '--heading', type=list, default=[180], help='Heading of the street view image')
-    parser.add_argument('-s', '--save_folder', type=str, help='Folder to save the street view images')
+    parser.add_argument('-f', '--file_path', type=str, required=True, help='Path to the kml file')
+    parser.add_argument('-r', '--route_name', type=str, required=True, help='Name of the route')
+    
+    # Create a mutually exclusive group for num_points and step_distance
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-n', '--num_points', type=int, help='Number of points to interpolate')
+    group.add_argument('-d', '--step_distance', type=float, help='Step distance for interpolation (in meters)')
+    
+    parser.add_argument('-s', '--save_folder', type=str, required=True, help='Folder to save the street view images')
     parser.add_argument('-a', '--angle', type=int, default=0, help='Angle offset from the forward direction (0-359 degrees)')
-    parser.add_argument('-d', '--raw_data_path', type=str, default='maps_raw_data', help='Path to the raw data directory')
+    parser.add_argument('--raw_data_path', type=str, default='maps_raw_data', help='Path to the raw data directory')
+    
     args = parser.parse_args()
     main(args)
