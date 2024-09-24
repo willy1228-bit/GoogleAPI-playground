@@ -11,7 +11,7 @@ from utils.kml_handler import parse_location
 load_dotenv()
 
 # Get the API key from environment variable
-api_key = os.getenv('GOOGLE_API_KEY')
+api_key = os.getenv('AIzaSyDsnBU1tkWUwZfZ6XdrIxrLyWOoCRxmB2c')
 
 
 def create_params(location, heading):
