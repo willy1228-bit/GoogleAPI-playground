@@ -11,7 +11,8 @@ from utils.kml_handler import parse_location
 load_dotenv()
 
 # Get the API key from environment variable
-api_key = os.getenv('AIzaSyC8yIm6iJ1YnK79ORui4q5l0WADtWjO4oY')
+api_key = os.getenv('sBJG7XnTErw0Iy_EpKaFUSwkCv0=')
+
 
 
 def create_params(location, heading):
